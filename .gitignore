@@ -1,0 +1,10 @@
+node_modules
+dist
+.output
+.wxt
+*.log
+*.local
+.env*
+.vscode
+.DS_Store
+Thumbs.db

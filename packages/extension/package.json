@@ -1,0 +1,24 @@
+{
+  "name": "@jable-enhance/extension",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt --browser firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build --browser firefox",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip --browser firefox"
+  },
+  "dependencies": {
+    "@jable-enhance/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^5.0.0",
+    "@wxt-dev/auto-icons": "^1.1.1",
+    "svelte": "^5.0.0",
+    "typescript": "^5.7.0",
+    "wxt": "^0.20.0"
+  }
+}

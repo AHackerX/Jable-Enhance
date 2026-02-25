@@ -1,0 +1,13 @@
+{
+  "name": "jable-enhance",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:ext": "pnpm --filter @jable-enhance/extension dev",
+    "dev:userscript": "pnpm --filter @jable-enhance/userscript dev",
+    "build:shared": "pnpm --filter @jable-enhance/shared build",
+    "build:ext": "pnpm --filter @jable-enhance/shared build && pnpm --filter @jable-enhance/extension build",
+    "build:userscript": "pnpm --filter @jable-enhance/shared build && pnpm --filter @jable-enhance/userscript build",
+    "build": "pnpm --filter @jable-enhance/shared build && pnpm --filter @jable-enhance/extension --filter @jable-enhance/userscript build"
+  }
+}

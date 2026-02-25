@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "types": ["wxt/browser"],
+    "paths": {
+      "~/*": ["./src/*"]
+    }
+  },
+  "include": ["src", ".wxt/wxt.d.ts"]
+}
