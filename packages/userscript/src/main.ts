@@ -1,4 +1,4 @@
-import { bootstrap } from "@jable-enhance/shared";
+import { bootstrap, bootstrapTagFilter, isListPage, sameFetch } from "@jable-enhance/shared";
 
 function gmFetch(url: string): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -17,9 +17,10 @@ function gmFetch(url: string): Promise<string> {
   });
 }
 
-if (location.href.match(/jable\.tv\/videos\//)) {
-  bootstrap({
-    fetch: gmFetch,
-    injectStyles: (css) => GM_addStyle(css),
-  });
+const injectStyles = (css: string) => GM_addStyle(css);
+
+if (isListPage()) {
+  bootstrapTagFilter({ fetch: sameFetch, injectStyles });
+} else if (location.href.includes("jable.tv/videos/")) {
+  bootstrap({ fetch: gmFetch, injectStyles });
 }

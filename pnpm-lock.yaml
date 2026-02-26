@@ -48,6 +48,9 @@ importers:
         specifier: workspace:*
         version: link:../shared
     devDependencies:
+      '@types/tampermonkey':
+        specifier: ^5.0.5
+        version: 5.0.5
       typescript:
         specifier: ^5.7.0
         version: 5.9.3
@@ -849,6 +852,9 @@ packages:
 
   '@types/node@25.3.0':
     resolution: {integrity: sha512-4K3bqJpXpqfg2XKGK9bpDTc6xO/xoUP/RBWS7AtRMug6zZFaRekiLzjVtAoZMquxoAbzBvy5nxQ7veS5eYzf8A==}
+
+  '@types/tampermonkey@5.0.5':
+    resolution: {integrity: sha512-ZWitwJH4T/jcQiynhc3I5DNiwlsDzVTKPXg6A8ltTw3SDuf0b00bNRSV0Z/yldnhhBi9e8g8vY/X3LVSQcaCKQ==}
 
   '@types/trusted-types@2.0.7':
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
@@ -3028,6 +3034,8 @@ snapshots:
   '@types/node@25.3.0':
     dependencies:
       undici-types: 7.18.2
+
+  '@types/tampermonkey@5.0.5': {}
 
   '@types/trusted-types@2.0.7': {}
 

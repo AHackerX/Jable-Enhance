@@ -4,6 +4,14 @@ export interface LinkedItem {
   url: string;
 }
 
+/** 通用选项：跨域请求 + 样式注入 */
+export interface EnhanceOptions {
+  /** 请求函数 */
+  fetch: (url: string) => Promise<string>;
+  /** 注入 CSS 样式 */
+  injectStyles: (css: string) => void;
+}
+
 /** JavDB 作品信息 */
 export interface JavdbInfo {
   /** 番号 */

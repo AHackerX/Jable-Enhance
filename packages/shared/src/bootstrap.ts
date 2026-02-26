@@ -2,24 +2,21 @@ import { extractCodeFromUrl, extractCodeFromDocument } from "./jable";
 import { buildSearchUrl, parseSearchResult, parseDetailPage } from "./javdb";
 import { renderInfoPanel } from "./ui";
 import { infoPanelStyles } from "./styles";
-
-export interface BootstrapOptions {
-  /** 跨域请求函数 */
-  fetch: (url: string) => Promise<string>;
-  /** 注入 CSS 样式 */
-  injectStyles: (css: string) => void;
-}
+import { waitForStable } from "./dom";
+import type { EnhanceOptions } from "./types";
 
 /**
  * 通用启动流程：提取番号 → 搜索 JavDB → 解析详情 → 渲染面板
  */
-export async function bootstrap(opts: BootstrapOptions): Promise<void> {
+export async function bootstrap(opts: EnhanceOptions): Promise<void> {
   const code =
     extractCodeFromUrl(location.href) ?? extractCodeFromDocument(document);
   if (!code) return;
 
   opts.injectStyles(infoPanelStyles);
 
+  // 等待页面稳定后再查找目标元素，避免被 KVS 框架 AJAX 重载覆盖
+  await waitForStable(".info-header, h4.mb-1");
   const target =
     document.querySelector(".info-header") ??
     document.querySelector("h4.mb-1")?.parentElement;
