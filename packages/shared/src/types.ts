@@ -16,6 +16,11 @@ export interface EnhanceOptions {
   cache?: CacheStorage;
 }
 
+/** 功能控制器，供外部控制显隐 */
+export interface FeatureController {
+  setVisible: (visible: boolean) => void;
+}
+
 /** JavDB 作品信息 */
 export interface JavdbInfo {
   /** 番号 */

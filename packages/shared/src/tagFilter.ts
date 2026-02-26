@@ -1,7 +1,7 @@
 import { tagFilterStyles } from "./styles";
 import { waitForStable } from "./dom";
 import { getCachedTags, setCachedTags } from "./cache";
-import type { EnhanceOptions } from "./types";
+import type { EnhanceOptions, FeatureController } from "./types";
 
 interface VideoCard {
   el: HTMLElement;
@@ -125,8 +125,9 @@ async function fetchConcurrent<T>(
 /**
  * 标签筛选功能主入口
  * 在列表页注入筛选面板，加载视频标签，支持按标签筛选
+ * 返回筛选面板元素，供外部控制显隐
  */
-export async function bootstrapTagFilter(opts: EnhanceOptions): Promise<void> {
+export async function bootstrapTagFilter(opts: EnhanceOptions): Promise<FeatureController | null> {
   opts.injectStyles(tagFilterStyles);
 
   // 等待页面稳定，避免被 KVS 框架 AJAX 重载覆盖
@@ -136,12 +137,14 @@ export async function bootstrapTagFilter(opts: EnhanceOptions): Promise<void> {
   const listBlock = document.querySelector("[id^='list_videos']");
   const videoContainer = listBlock?.querySelector(".row") ??
     document.querySelector(".container .row");
-  if (!videoContainer) return;
+  if (!videoContainer) return null;
   const container = videoContainer as Element;
 
   // 收集当前页卡片
   const cards: VideoCard[] = getVideoCards(container);
-  if (cards.length === 0) return;
+  if (cards.length === 0) return null;
+  /** 第一页原始卡片数量 */
+  const firstPageCount = cards.length;
 
   // 获取分页信息
   const pagination = getAjaxPagination();
@@ -365,4 +368,15 @@ export async function bootstrapTagFilter(opts: EnhanceOptions): Promise<void> {
   // 加载当前页卡片的标签，若命中缓存则自动加载全部页面
   const hasCached = await loadTags(cards);
   if (hasCached) await loadAllPages();
+
+  return {
+    setVisible: (visible: boolean) => {
+      panel.style.display = visible ? "" : "none";
+      for (const div of pageDividers) div.style.display = visible ? "" : "none";
+      // 额外加载的卡片（非第一页）
+      for (let i = firstPageCount; i < cards.length; i++) {
+        cards[i].el.style.display = visible ? "" : "none";
+      }
+    },
+  };
 }

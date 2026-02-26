@@ -7,17 +7,85 @@
 }
 
 body {
-  width: 300px;
+  width: 280px;
   padding: 16px;
   font-family: system-ui, sans-serif;
+  font-size: 14px;
+  color: #e0e0e0;
+  background: #1a1a2e;
 }
 
 h1 {
   font-size: 18px;
-  margin-bottom: 4px;
+  color: #7c8cf8;
 }
 
-p {
+.version {
   color: #666;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+section {
+  border-top: 1px solid #333;
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+h2 {
   font-size: 13px;
+  color: #999;
+  margin-bottom: 8px;
+}
+
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  cursor: pointer;
+}
+
+.toggle-row input[type="checkbox"] {
+  accent-color: #7c8cf8;
+  width: 16px;
+  height: 16px;
+}
+
+.hint {
+  font-size: 11px;
+  color: #666;
+  margin-top: 6px;
+}
+
+.cache-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.cache-row span {
+  font-size: 13px;
+  color: #aaa;
+}
+
+button {
+  padding: 4px 10px;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background: #2a2a4a;
+  color: #ddd;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+button:hover:not(:disabled) {
+  background: #3a3a5a;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

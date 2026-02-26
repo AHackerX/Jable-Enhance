@@ -1,3 +1,5 @@
+import { CACHE_PREFIX } from "./constants";
+
 /** 缓存存储接口 */
 export interface CacheStorage {
   get: (key: string) => Promise<string | null>;
@@ -12,7 +14,6 @@ interface CacheEntry {
 
 /** 默认缓存有效期：7 天 */
 const DEFAULT_TTL = 7 * 24 * 60 * 60 * 1000;
-const CACHE_PREFIX = "je_tags_";
 
 /** 从缓存读取视频标签 */
 export async function getCachedTags(
