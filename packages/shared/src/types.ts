@@ -1,15 +1,19 @@
+import type { CacheStorage } from "./cache";
+
 /** 带链接的条目 */
 export interface LinkedItem {
   name: string;
   url: string;
 }
 
-/** 通用选项：跨域请求 + 样式注入 */
+/** 通用选项：请求 + 样式注入 + 可选缓存 */
 export interface EnhanceOptions {
   /** 请求函数 */
   fetch: (url: string) => Promise<string>;
   /** 注入 CSS 样式 */
   injectStyles: (css: string) => void;
+  /** 可选的缓存存储（用于标签筛选缓存） */
+  cache?: CacheStorage;
 }
 
 /** JavDB 作品信息 */

@@ -11,7 +11,7 @@ export default defineConfig({
   manifest: {
     name: "Jable Enhance",
     description: "增强 Jable.tv 的使用体验",
-    permissions: ["activeTab"],
+    permissions: ["activeTab", "storage"],
     host_permissions: ["*://*.javdb.com/*"],
   },
 });

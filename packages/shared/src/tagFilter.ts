@@ -1,5 +1,6 @@
 import { tagFilterStyles } from "./styles";
 import { waitForStable } from "./dom";
+import { getCachedTags, setCachedTags } from "./cache";
 import type { EnhanceOptions } from "./types";
 
 interface VideoCard {
@@ -225,25 +226,48 @@ export async function bootstrapTagFilter(opts: EnhanceOptions): Promise<void> {
     render();
   }
 
-  /** 为卡片加载标签 */
-  async function loadTags(batch: VideoCard[]) {
-    const urls = batch.filter((c) => !c.loaded).map((c) => c.url);
-    if (urls.length === 0) return;
+  /** 为卡片加载标签（优先读缓存），返回是否有缓存命中 */
+  async function loadTags(batch: VideoCard[]): Promise<boolean> {
+    const unloaded = batch.filter((c) => !c.loaded);
+    if (unloaded.length === 0) return false;
 
-    const htmls = await fetchConcurrent(urls, opts.fetch);
-    let urlIdx = 0;
-    for (const card of batch) {
-      if (card.loaded) continue;
-      try {
-        const tags = parseTagsFromDetail(htmls[urlIdx++]);
-        card.tags = tags;
-        for (const t of tags) {
-          allTags.set(t, (allTags.get(t) ?? 0) + 1);
+    // 先尝试从缓存读取
+    let cacheHit = false;
+    const toFetch: VideoCard[] = [];
+    if (opts.cache) {
+      for (const card of unloaded) {
+        const cached = await getCachedTags(opts.cache, card.url);
+        if (cached) {
+          cacheHit = true;
+          card.tags = cached;
+          card.loaded = true;
+          for (const t of cached) allTags.set(t, (allTags.get(t) ?? 0) + 1);
+        } else {
+          toFetch.push(card);
         }
-      } catch { /* 忽略单个失败 */ }
-      card.loaded = true;
+      }
+    } else {
+      toFetch.push(...unloaded);
     }
+
+    // 未命中缓存的发起请求
+    if (toFetch.length > 0) {
+      const urls = toFetch.map((c) => c.url);
+      const htmls = await fetchConcurrent(urls, opts.fetch);
+      for (let i = 0; i < toFetch.length; i++) {
+        const card = toFetch[i];
+        try {
+          const tags = parseTagsFromDetail(htmls[i]);
+          card.tags = tags;
+          for (const t of tags) allTags.set(t, (allTags.get(t) ?? 0) + 1);
+          if (opts.cache) await setCachedTags(opts.cache, card.url, tags);
+        } catch { /* 忽略单个失败 */ }
+        card.loaded = true;
+      }
+    }
+
     render();
+    return cacheHit;
   }
 
   /** 构建分界线 HTML：── « ‹ 1 2 [3] ... › | 第 X 页 ── */
@@ -338,6 +362,7 @@ export async function bootstrapTagFilter(opts: EnhanceOptions): Promise<void> {
   // 初始渲染
   render();
 
-  // 加载当前页卡片的标签
-  await loadTags(cards);
+  // 加载当前页卡片的标签，若命中缓存则自动加载全部页面
+  const hasCached = await loadTags(cards);
+  if (hasCached) await loadAllPages();
 }
